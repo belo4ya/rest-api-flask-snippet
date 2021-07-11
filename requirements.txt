@@ -1,0 +1,7 @@
+Flask==2.0.1
+
+flask-restx==0.4.0
+
+Flask-SQLAlchemy==2.5.1
+SQLAlchemy==1.4.20
+Flask-Migrate==3.0.1
