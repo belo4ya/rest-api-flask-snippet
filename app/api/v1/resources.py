@@ -1,12 +1,7 @@
+from app.utils import status
+
 from flask_restx import Namespace, Resource, fields
 
-todos = Namespace('todos', description='todos description')
-
-todo_model = todos.model('Todo', {
-    'id': fields.String(),
-    'title': fields.String(),
-    'description': fields.String(),
-})
 
 TODOS_MOCK = [
     {
@@ -29,21 +24,59 @@ TODOS_MOCK = [
     },
 ]
 
+ns = Namespace('todos', description='todos description')
 
-@todos.route('/<int:todo_id>')
-@todos.param('todo_id', 'The Todo identifier')
+todo = ns.model('Todo', {
+    'id': fields.String(readonly=True),
+    'title': fields.String(),
+    'description': fields.String(),
+})
+
+
+@ns.route('/<int:todo_id>')
+@ns.param('todo_id', 'The Todo identifier')
 class Todo(Resource):
 
-    @todos.doc('get_todo')
-    @todos.marshal_list_with(todo_model)
+    @ns.marshal_with(todo)
     def get(self, todo_id):
         return TODOS_MOCK[todo_id]
 
+    @ns.expect(todo, validate=True)
+    @ns.marshal_with(todo, code=status.CREATED)
+    def put(self, todo_id):
+        TODOS_MOCK[todo_id] = ns.payload
+        return TODOS_MOCK[todo_id], status.CREATED
 
-@todos.route('/')
+    @ns.response(status.NO_CONTENT, 'Deleted')
+    def delete(self, todo_id):
+        TODOS_MOCK.pop(todo_id)
+        return '', status.NO_CONTENT
+
+
+@ns.route('/')
 class TodoList(Resource):
 
-    @todos.doc('list_todos')
-    @todos.marshal_list_with(todo_model)
+    @ns.marshal_list_with(todo)
     def get(self):
         return TODOS_MOCK
+
+    @ns.expect(todo, validate=True)
+    @ns.marshal_with(todo, code=status.CREATED)
+    def post(self):
+        new_todo = ns.payload
+        new_todo['id'] = len(TODOS_MOCK)
+        TODOS_MOCK.append(new_todo)
+        return new_todo, status.CREATED
+
+
+@ns.route('/batch')
+class TodoBatch(Resource):
+
+    def post(self):
+        pass
+
+    def put(self):
+        pass
+
+    def delete(self):
+        pass

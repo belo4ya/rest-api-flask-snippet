@@ -1,7 +1,7 @@
 from flask import Blueprint
 from flask_restx import Api
 
-from .resources import todos
+from .resources import ns
 
 __version__ = 1
 
@@ -13,4 +13,4 @@ api = Api(
     description='Simple description for my API',
 )
 
-api.add_namespace(todos)
+api.add_namespace(ns)
