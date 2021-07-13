@@ -10,8 +10,7 @@ from app.extensions import db
 def get_current_user_id():
     try:
         verify_jwt_in_request()
-        id_ = current_user.id
-        return id_
+        return current_user.id
     except (RuntimeError, NoAuthorizationError):
         return None
 
@@ -21,13 +20,13 @@ class Model(db.Model, AllFeaturesMixin):
 
     id = db.Column(db.Integer, primary_key=True)
 
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=True)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=True)
 
     @db.declared_attr
     def created_by(self):
         return db.Column(
-            db.BigInteger,
+            db.Integer,
             db.ForeignKey('users.id'),
             default=get_current_user_id,
             nullable=True
@@ -36,7 +35,7 @@ class Model(db.Model, AllFeaturesMixin):
     @db.declared_attr
     def updated_by(self):
         return db.Column(
-            db.BigInteger,
+            db.Integer,
             db.ForeignKey('users.id'),
             default=get_current_user_id,
             onupdate=get_current_user_id,
