@@ -25,7 +25,7 @@ class Role(Model):
     __tablename__ = 'roles'
     __repr_attrs__ = ['name']
 
-    name = db.Column(db.Enum(security.Role), unique=True, nullable=False)
+    name = db.Column(db.Enum(security.ROLES), unique=True, nullable=False)
 
     permissions = db.relationship(
         'Permission', secondary=assoc_permission_role, backref='role'
@@ -36,7 +36,7 @@ assoc_user_role = db.Table(
     'users_roles',
     Model.metadata,
     db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
-    db.Column('role_id', db.Integer, db.ForeignKey('roles.id')),
+    db.Column('role_id', db.Integer, db.ForeignKey('roles.id'), default=security.ROLES.USER),
     db.UniqueConstraint('user_id', 'role_id')
 )
 
