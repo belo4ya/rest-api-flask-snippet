@@ -1,5 +1,7 @@
 import flask
-from . import config, extensions, api
+
+from . import config, extensions
+from .blueprints import auth_bp, api_bp
 
 
 def create_app(config_name: str = 'default') -> flask.Flask:
@@ -19,10 +21,13 @@ def register_config(app: flask.Flask, config_name: str) -> None:
 
 
 def register_extensions(app: flask.Flask) -> None:
+    extensions.ma.init_app(app)
+    extensions.jwt.init_app(app)
     extensions.db.init_app(app)
     extensions.migrate.init_app(app)
+    extensions.api.init_app(app)
 
 
 def register_blueprints(app: flask.Flask) -> None:
-    app.register_blueprint(api.api_v1)
-    app.register_blueprint(api.api_v2)
+    app.register_blueprint(api_bp)
+    app.register_blueprint(auth_bp)
