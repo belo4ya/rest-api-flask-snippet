@@ -10,3 +10,9 @@ class Credentials(ma.Schema):
 
 class AccessToken(ma.Schema):
     access_token = fields.String(required=True)
+
+
+class UserClaims(ma.Schema):
+    id = fields.Integer()
+    username = fields.String()
+    roles = fields.Function(lambda obj: [role.name.name for role in obj.roles] if obj else [])

@@ -15,7 +15,7 @@ bp = Blueprint(
 @bp.arguments(schemas.Credentials, as_kwargs=True)
 @bp.response(200, schemas.AccessToken)
 def sign_up_view(username, password):
-    access_token = services.Auth.sign_up(username, password)
+    access_token = services.sign_up(username, password)
     return {'access_token': access_token}
 
 
@@ -23,5 +23,5 @@ def sign_up_view(username, password):
 @bp.arguments(schemas.Credentials, as_kwargs=True)
 @bp.response(200, schemas.AccessToken)
 def sign_in_view(username, password):
-    access_token = services.Auth.sign_in(username, password)
+    access_token = services.sign_in(username, password)
     return {'access_token': access_token}
