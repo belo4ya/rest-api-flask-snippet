@@ -28,11 +28,12 @@ class _BaseConfig:
     OPENAPI_VERSION = '3.0.3'
 
     @classmethod
-    def __setup_ui_specs(cls):
+    def setup_ui_specs(cls):
         for k, v in SPEC_UI.items():
-            cls.__setattr__(cls, k, v)
+            setattr(cls, k, v)
 
-    __setup_ui_specs()
+
+_BaseConfig.setup_ui_specs()
 
 
 class DevelopmentConfig(_BaseConfig):

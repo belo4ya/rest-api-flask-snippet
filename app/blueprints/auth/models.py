@@ -1,15 +1,15 @@
-from werkzeug import security
+from werkzeug.security import generate_password_hash
 
+from app.blueprints.auth import security
 from app.core.database import Model
 from app.extensions import db
-from app.blueprints.auth import security
 
 
 class Permission(Model):
     __tablename__ = 'permissions'
     __repr_attrs__ = ['name']
 
-    name = db.Column(db.String(255), unique=True, nullable=False)
+    name = db.Column(db.Enum(security.PERMISSIONS), unique=True, nullable=False)
 
 
 assoc_permission_role = db.Table(
@@ -57,6 +57,6 @@ class User(Model):
     @classmethod
     def create(cls, **kwargs):
         if 'password' in kwargs:
-            kwargs['password'] = security.generate_password_hash(kwargs['password'])
+            kwargs['password'] = generate_password_hash(kwargs['password'])
 
         return super(User, cls).create(**kwargs)

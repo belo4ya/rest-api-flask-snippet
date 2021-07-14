@@ -42,26 +42,27 @@ ROLES_PERMISSIONS = {
 
 
 def init():
-    init_permissions()
-    init_roles()
-    init_users()
+    _init_permissions()
+    _init_roles()
+    _init_users()
     db.session.commit()
 
 
-def init_permissions():
+def _init_permissions():
     for permission in PERMISSIONS.__members__.values():
         models.Permission.create(name=permission)
 
 
-def init_roles():
+def _init_roles():
     for role in ROLES.__members__.values():
-        models.Role.create(name=role, permissions=ROLES_PERMISSIONS[role])
+        permissions = models.Permission.where(name__in=ROLES_PERMISSIONS[role]).all()
+        models.Role.create(name=role, permissions=permissions)
 
 
-def init_users():
+def _init_users():
     user = {
         'username': 'admin',
         'password': 'admin',
-        'roles': models.Role.where(name__in=['admin']).all(),
+        'roles': models.Role.where(name__in=['ADMIN']).all(),
     }
     models.User.create(**user)
