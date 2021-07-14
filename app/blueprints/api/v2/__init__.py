@@ -1,16 +1,13 @@
-from flask import Blueprint
-from flask_restx import Api
+from flask_smorest import Blueprint
 
-from .resources import cats
+from .views import view_bps
 
-__version__ = 2
-
-bp = Blueprint(f'api_v{__version__}', __name__, url_prefix=f'/api/v{__version__}')
-api = Api(
-    bp,
-    title='My API',
-    version=f'{__version__}.0',
-    description='Simple description for my API',
+bp = Blueprint(
+    'v2',
+    __name__,
+    url_prefix='/v2',
+    description='API version 2.'
 )
 
-api.add_namespace(cats)
+for bp_ in view_bps:
+    bp.register_blueprint(bp_)
