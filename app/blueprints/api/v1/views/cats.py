@@ -12,8 +12,6 @@ bp = Blueprint(
 
 
 @bp.get('/get')
-@services.has_access(permissions=[
-    security.PERMISSIONS.CAN_READ
-])
+@services.has_access(roles=[security.ROLES.USER])
 def get_cats_view():
     return {'cats': 'wow!'}

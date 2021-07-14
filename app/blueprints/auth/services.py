@@ -1,12 +1,13 @@
 from functools import wraps
 from typing import Optional
 
-from flask_jwt_extended import create_access_token, jwt_required
-from werkzeug import security
+from flask_jwt_extended import create_access_token, jwt_required, current_user
+from werkzeug.security import check_password_hash
 
 from app.core import exceptions
 from app.extensions import jwt, db
 from . import models, schemas
+from .security import ROLES, PERMISSIONS, ROLES_PERMISSIONS
 
 
 @jwt.user_identity_loader
@@ -51,7 +52,7 @@ def sign_in(username, password) -> Optional[str]:
             f"The user '{username}' not found."
         )
 
-    if not security.check_password_hash(user.password, password):
+    if not check_password_hash(user.password, password):
         raise exceptions.BadCredentials(
             f'Failed to log in, password may be incorrect.'
         )
@@ -59,16 +60,58 @@ def sign_in(username, password) -> Optional[str]:
     return create_access_token(user.username)
 
 
-def has_access(permissions=None, **jwt_kwargs):
+def has_access(
+        permissions: Optional[list[PERMISSIONS]] = None,
+        roles: Optional[list[ROLES]] = None,
+        **jwt_kwargs
+):
     def requires_access_decorator(func):
         @wraps(func)
         def decorated(*args, **kwargs):
-            with_jwt = jwt_required(**jwt_kwargs)(func)
-            if permissions:
-                print(permissions)
+            func_out = jwt_required(**jwt_kwargs)(func)(*args, **kwargs)  # применение декоратора jwt_required
 
-            return with_jwt(*args, **kwargs)
+            if _has_permissions(permissions, roles):
+                return func_out
+
+            raise exceptions.AccessDenied(
+                "You don't have the permission to access the requested resource."
+                " It is either read-protected or not readable by the server."
+            )
 
         return decorated
 
     return requires_access_decorator
+
+
+def _has_permissions(
+        permissions: Optional[list[PERMISSIONS]] = None,
+        roles: Optional[list[ROLES]] = None,
+) -> bool:
+    if not permissions and not roles:
+        return False
+
+    expected_permissions = _get_expected_permissions(permissions, roles)
+    existing_permissions = _get_existing_permissions(current_user)
+    return expected_permissions & existing_permissions == expected_permissions
+
+
+def _get_expected_permissions(
+        permissions: Optional[list[PERMISSIONS]] = None,
+        roles: Optional[list[ROLES]] = None
+) -> set[PERMISSIONS]:
+    expected_permissions = set()
+    if permissions:
+        expected_permissions.update(permissions)
+    if roles:
+        for role in roles:
+            expected_permissions.update(ROLES_PERMISSIONS[role])
+
+    return expected_permissions
+
+
+def _get_existing_permissions(user: models.User) -> set[PERMISSIONS]:
+    existing_permissions = set()
+    for role in user.roles:
+        existing_permissions.update([permission.name for permission in role.permissions])
+
+    return existing_permissions
