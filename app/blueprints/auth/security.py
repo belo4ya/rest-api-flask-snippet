@@ -63,6 +63,6 @@ def _init_users():
     user = {
         'username': 'admin',
         'password': 'admin',
-        'roles': models.Role.where(name__in=['ADMIN']).all(),
+        'roles': models.Role.where(name__in=[ROLES.ADMIN]).all(),
     }
     models.User.create(**user)
