@@ -1,6 +1,6 @@
 import flask
 
-from . import config, extensions
+from . import config, extensions, cli
 from .blueprints import auth_bp, api_bp
 
 
@@ -12,6 +12,8 @@ def create_app(config_name: str = 'default') -> flask.Flask:
     register_extensions(app)
 
     register_blueprints(app)
+
+    register_cli(app)
 
     return app
 
@@ -31,3 +33,7 @@ def register_extensions(app: flask.Flask) -> None:
 def register_blueprints(app: flask.Flask) -> None:
     app.register_blueprint(api_bp)
     app.register_blueprint(auth_bp)
+
+
+def register_cli(app: flask.Flask) -> None:
+    app.cli.add_command(cli.setup_cli)
