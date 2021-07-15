@@ -3,16 +3,6 @@ import os
 
 BASEDIR = os.path.abspath(os.path.dirname(__file__))
 
-SPEC_UI = {
-    'OPENAPI_URL_PREFIX': '/doc',
-    'OPENAPI_REDOC_PATH': '/redoc',
-    'OPENAPI_REDOC_URL': 'https://cdn.jsdelivr.net/npm/redoc@next/bundles/redoc.standalone.js',
-    'OPENAPI_SWAGGER_UI_PATH': '/swagger-ui',
-    'OPENAPI_SWAGGER_UI_URL': 'https://cdn.jsdelivr.net/npm/swagger-ui-dist/',
-    'OPENAPI_RAPIDOC_PATH': '/rapidoc',
-    'OPENAPI_RAPIDOC_URL': 'https://unpkg.com/rapidoc/dist/rapidoc-min.js',
-}
-
 
 class _BaseConfig:
     DEBUG = False
@@ -27,13 +17,13 @@ class _BaseConfig:
     API_VERSION = 'v1'
     OPENAPI_VERSION = '3.0.3'
 
-    @classmethod
-    def setup_ui_specs(cls):
-        for k, v in SPEC_UI.items():
-            setattr(cls, k, v)
-
-
-_BaseConfig.setup_ui_specs()
+    OPENAPI_URL_PREFIX = "/doc"
+    OPENAPI_REDOC_PATH = "/redoc"
+    OPENAPI_REDOC_URL = "https://cdn.jsdelivr.net/npm/redoc@next/bundles/redoc.standalone.js"
+    OPENAPI_SWAGGER_UI_PATH = "/swagger-ui"
+    OPENAPI_SWAGGER_UI_URL = "https://cdn.jsdelivr.net/npm/swagger-ui-dist/"
+    OPENAPI_RAPIDOC_PATH = "/rapidoc"
+    OPENAPI_RAPIDOC_URL = "https://unpkg.com/rapidoc/dist/rapidoc-min.js"
 
 
 class DevelopmentConfig(_BaseConfig):

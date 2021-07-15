@@ -15,6 +15,8 @@ def create_app(config_name: str = 'default') -> flask.Flask:
 
     register_cli_commands(app)
 
+    register_blueprints_views_in_doc(app)
+
     return app
 
 
@@ -37,3 +39,11 @@ def register_blueprints(app: flask.Flask) -> None:
 
 def register_cli_commands(app: flask.Flask) -> None:
     app.cli.add_command(cli.setup_group)
+
+
+def register_blueprints_views_in_doc(app: flask.Flask) -> None:
+    pass
+    # bp = api_bp._blueprints[1][0]
+    # print(bp._blueprints[0][0].url_default_functions)
+    # bp.register_views_in_doc(extensions.api, app, extensions.api.spec)
+    # extensions.api.spec.tag({'name': bp.name, 'description': bp.description})
