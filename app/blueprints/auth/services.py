@@ -27,7 +27,7 @@ def add_claims_to_access_token(identity):
     if user is None:
         return {'user': None}
 
-    return {'user': schemas.UserClaims().dump(user)}
+    return {'user': schemas.UserClaimsSchema().dump(user)}
 
 
 def sign_up(username, password) -> Optional[str]:

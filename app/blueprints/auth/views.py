@@ -12,16 +12,16 @@ bp = Blueprint(
 
 
 @bp.post('/sign_up')
-@bp.arguments(schemas.Credentials, as_kwargs=True)
-@bp.response(200, schemas.AccessToken)
+@bp.arguments(schemas.CredentialsSchema, as_kwargs=True)
+@bp.response(200, schemas.AccessTokenSchema)
 def sign_up_view(username, password):
     access_token = services.sign_up(username, password)
     return {'access_token': access_token}
 
 
 @bp.post('/sign_in')
-@bp.arguments(schemas.Credentials, as_kwargs=True)
-@bp.response(200, schemas.AccessToken)
+@bp.arguments(schemas.CredentialsSchema, as_kwargs=True)
+@bp.response(200, schemas.AccessTokenSchema)
 def sign_in_view(username, password):
     access_token = services.sign_in(username, password)
     return {'access_token': access_token}
