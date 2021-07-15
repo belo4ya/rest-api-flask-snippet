@@ -1,6 +1,7 @@
-from app.extensions import ma
-from flask_smorest import fields
+from app.core.schema import ma, ServiceFieldsMixin
+from . import models
 
 
-class MultipartFile(ma.Schema):
-    file = fields.Upload(ma)
+class RaccoonSchema(ma.SQLAlchemyAutoSchema, ServiceFieldsMixin):
+    class Meta:
+        model = models.Raccoon
