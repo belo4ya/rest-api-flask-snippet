@@ -36,4 +36,4 @@ def register_blueprints(app: flask.Flask) -> None:
 
 
 def register_cli_commands(app: flask.Flask) -> None:
-    app.cli.add_command(cli.setup_cli)
+    app.cli.add_command(cli.setup_group)
