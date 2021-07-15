@@ -16,6 +16,12 @@ bp = Blueprint(
 )
 
 
+@bp.route('/meow', methods=['GET', 'POST'])
+@bp.response(200, schemas.MeowSchema)
+def raccoon_meow_view():
+    return {'meow': models.Raccoon.MEOW}
+
+
 @bp.route('/')
 class RaccoonListView(MethodView):
 
