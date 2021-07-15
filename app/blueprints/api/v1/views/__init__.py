@@ -1,7 +1,5 @@
-from .cats import bp as cats_bp
-from .dogs import bp as dogs_bp
+from .view_template import bp as template_bp
 
 view_bps = [
-    cats_bp,
-    dogs_bp,
+    template_bp,
 ]
