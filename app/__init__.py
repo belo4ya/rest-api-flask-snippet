@@ -13,7 +13,7 @@ def create_app(config_name: str = 'default') -> flask.Flask:
 
     register_blueprints(app)
 
-    register_cli(app)
+    register_cli_commands(app)
 
     return app
 
@@ -35,5 +35,5 @@ def register_blueprints(app: flask.Flask) -> None:
     app.register_blueprint(auth_bp)
 
 
-def register_cli(app: flask.Flask) -> None:
+def register_cli_commands(app: flask.Flask) -> None:
     app.cli.add_command(cli.setup_cli)
